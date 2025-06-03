@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Müzik Uygulaması</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 240px;
+            background-color: #000000;
+            padding: 20px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar a {
+            color: #b3b3b3;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 10px;
+            display: block;
+            border-radius: 5px;
+        }
+
+        .sidebar a:hover, .sidebar a.active {
+            background-color: #282828;
+            color: #ffffff;
+        }
+
+        .main-content {
+            margin-left: 240px;
+            padding: 20px;
+            width: calc(100% - 240px);
+        }
+
+        .header {
+            background-color: #181818;
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header input {
+            padding: 10px;
+            border: none;
+            border-radius: 20px;
+            background-color: #282828;
+            color: #ffffff;
+            width: 300px;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .player {
+            background-color: #181818;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .album-art {
+            width: 100%;
+            max-width: 300px;
+            height: 300px;
+            background-color: #333;
+            border-radius: 10px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .song-info h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .song-info p {
+            color: #b3b3b3;
+            margin-bottom: 20px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .controls button {
+            background-color: #1db954;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            font-size: 20px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .controls button:hover {
+            background-color: #1ed760;
+        }
+
+        .playlist, .search-results {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .playlist-item, .search-item {
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .playlist-item:hover, .search-item:hover {
+            background-color: #282828;
+        }
+
+        .playlist-item.active {
+            background-color: #1db954;
+        }
+
+        .card {
+            background-color: #181818;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .card h3 {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <a href="#home" class="active" onclick="showSection('home')">Ana Sayfa</a>
+        <a href="#search" onclick="showSection('search')">Ara</a>
+        <a href="#playlists" onclick="showSection('playlists')">Çalma Listeleri</a>
+        <a href="#library" onclick="showSection('library')">Kitaplık</a>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>Müzik Uygulaması</h1>
+            <input type="text" id="search-input" placeholder="Şarkı, sanatçı veya albüm ara..." oninput="searchSongs()">
+        </div>
+
+        <div id="home" class="section active">
+            <div class="player">
+                <div class="album-art">Albüm Kapağı</div>
+                <div class="song-info">
+                    <h2 id="song-title">Şarkı Adı</h2>
+                    <p id="artist">Sanatçı</p>
+                </div>
+                <div class="controls">
+                    <button onclick="previousSong()">⏮</button>
+                    <button onclick="togglePlay()">▶</button>
+                    <button onclick="nextSong()">⏭</button>
+                </div>
+                <div class="playlist" id="playlist">
+                    <!-- Şarkı listesi buraya dinamik olarak eklenecek -->
+                </div>
+            </div>
+        </div>
+
+        <div id="search" class="section">
+            <div class="card">
+                <h3>Arama Sonuçları</h3>
+                <div class="search-results" id="search-results">
+                    <!-- Arama sonuçları buraya eklenecek -->
+                </div>
+            </div>
+        </div>
+
+        <div id="playlists" class="section">
+            <div class="card">
+                <h3>Çalma Listeleri</h3>
+                <div class="playlist-item">Türkçe Pop</div>
+                <div class="playlist-item">Akustik Anlar</div>
+                <div class="playlist-item">Nostalji</div>
+            </div>
+        </div>
+
+        <div id="library" class="section">
+            <div class="card">
+                <h3>Kitaplık</h3>
+                <div class="playlist-item">Son Eklenenler</div>
+                <div class="playlist-item">Albümler</div>
+                <div class="playlist-item">Sanatçılar</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const songs = [
+            { title: "Yalan", artist: "Athena", src: "path/to/yalan.mp3" },
+            { title: "Bir Sevmek Bin Defa Ölmek Demekmiş", artist: "Barış Manço", src: "path/to/bir-sevmek.mp3" },
+            { title: "Resimdeki Gözyaşları", artist: "Cem Karaca", src: "path/to/resimdeki-gozyaslari.mp3" },
+            { title: "Seni Anan Benim İçin Doğurmuş", artist: "Edip Akbayram", src: "path/to/seni-anan.mp3" },
+            { title: "Fikrimin İnce Gülü", artist: "Müslüm Gencebay", src: "path/to/fikrimin-ince-gulu.mp3" }
+        ];
+
+        let currentSongIndex = 0;
+        const audio = new Audio();
+        let isPlaying = false;
+
+        function loadSong(index) {
+            const song = songs[index];
+            audio.src = song.src;
+            document.getElementById('song-title').textContent = song.title;
+            document.getElementById('artist').textContent = song.artist;
+            updatePlaylist();
+        }
+
+        function togglePlay() {
+            if (isPlaying) {
+                audio.pause();
+            } else {
+                audio.play().catch(() => {
+                    console.log("Şarkı dosyası yüklenemedi. Lütfen geçerli bir MP3 dosyası ekleyin.");
+                });
+            }
+            isPlaying = !isPlaying;
+            document.querySelector('.controls button:nth-child(2)').textContent = isPlaying ? '⏸' : '▶';
+        }
+
+        function nextSong() {
+            currentSongIndex = (currentSongIndex + 1) % songs.length;
+            loadSong(currentSongIndex);
+            if (isPlaying) audio.play().catch(() => {});
+        }
+
+        function previousSong() {
+            currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+            loadSong(currentSongIndex);
+            if (isPlaying) audio.play().catch(() => {});
+        }
+
+        function updatePlaylist() {
+            const playlist = document.getElementById('playlist');
+            playlist.innerHTML = '';
+            songs.forEach((song, index) => {
+                const div = document.createElement('div');
+                div.className = 'playlist-item' + (index === currentSongIndex ? ' active' : '');
+                div.textContent = `${song.title} - ${song.artist}`;
+                div.onclick = () => {
+                    currentSongIndex = index;
+                    loadSong(index);
+                    if (isPlaying) audio.play().catch(() => {});
+                };
+                playlist.appendChild(div);
+            });
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+
+            document.querySelectorAll('.sidebar a').forEach(a => {
+                a.classList.remove('active');
+            });
+            document.querySelector(`.sidebar a[href="#${sectionId}"]`).classList.add('active');
+        }
+
+        function searchSongs() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const results = document.getElementById('search-results');
+            results.innerHTML = '';
+            songs
+                .filter(song => song.title.toLowerCase().includes(query) || song.artist.toLowerCase().includes(query))
+                .forEach(song => {
+                    const div = document.createElement('div');
+                    div.className = 'search-item';
+                    div.textContent = `${song.title} - ${song.artist}`;
+                    div.onclick = () => {
+                        currentSongIndex = songs.indexOf(song);
+                        loadSong(currentSongIndex);
+                        if (isPlaying) audio.play().catch(() => {});
+                    };
+                    results.appendChild(div);
+                });
+        }
+
+        // İlk şarkıyı yükle
+        loadSong(currentSongIndex);
+    </script>
+</body>
+</html>

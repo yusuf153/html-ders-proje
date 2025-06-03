@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Müzik Keşif Platformu</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Müzik Keşif</h2>
+        <a href="#discover" class="active" onclick="showSection('discover')">Keşfet</a>
+        <a href="#playlists" onclick="showSection('playlists')">Çalma Listeleri</a>
+        <a href="#liked" onclick="showSection('liked')">Beğenilenler</a>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>Müzik Keşif Platformu</h1>
+            <input type="text" id="search-input" placeholder="Şarkı veya sanatçı ara..." oninput="searchSongs()">
+        </div>
+
+        <div id="discover" class="section active">
+            <div class="card">
+                <h3>Önerilen Şarkılar</h3>
+                <div id="discover-songs" class="song-list"></div>
+            </div>
+            <div class="card">
+                <h3>Popüler Sanatçılar</h3>
+                <div class="artist-list">
+                    <div class="artist-item">Tarkan</div>
+                    <div class="artist-item">Sezen Aksu</div>
+                    <div class="artist-item">Mor ve Ötesi</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="playlists" class="section">
+            <div class="card">
+                <h3>Çalma Listelerin</h3>
+                <input type="text" id="new-playlist" placeholder="Yeni çalma listesi adı...">
+                <button onclick="createPlaylist()">Oluştur</button>
+                <div id="playlist-list"></div>
+            </div>
+        </div>
+
+        <div id="liked" class="section">
+            <div class="card">
+                <h3>Beğenilen Şarkılar</h3>
+                <div id="liked-songs" class="song-list"></div>
+            </div>
+        </div>
+
+        <div class="player">
+            <div class="song-info">
+                <h2 id="song-title">Şarkı Adı</h2>
+                <p id="artist">Sanatçı</p>
+            </div>
+            <div class="controls">
+                <button onclick="previousSong()">⏮</button>
+                <button onclick="togglePlay()">▶</button>
+                <button onclick="nextSong()">⏭</button>
+                <button onclick="likeSong()" id="like-button">♡</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

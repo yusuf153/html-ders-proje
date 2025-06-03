@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hızlı Tıkla Oyunu</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+  :root {
+    --primary-color: #4e9af1;
+    --secondary-color: #f25c54;
+    --bg-color: #121212;
+    --text-color: #f0f0f0;
+  }
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    user-select: none;
+  }
+  h1 {
+    margin-bottom: 5px;
+    font-weight: 700;
+  }
+  p.instructions {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #ccc;
+  }
+  .timer {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: var(--secondary-color);
+  }
+  button.click-button {
+    background: var(--primary-color);
+    border: none;
+    padding: 25px 50px;
+    border-radius: 15px;
+    font-size: 2rem;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(78,154,241,0.6);
+    transition: background-color 0.3s, transform 0.1s;
+  }
+  button.click-button:active {
+    background-color: #3a7bd5;
+    transform: scale(0.95);
+  }
+  .result {
+    margin-top: 20px;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--secondary-color);
+  }
+  .restart-button {
+    margin-top: 15px;
+    background: var(--secondary-color);
+    border: none;
+    padding: 12px 30px;
+    border-radius: 12px;
+    font-size: 1rem;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(242,92,84,0.6);
+    transition: background-color 0.3s;
+  }
+  .restart-button:hover {
+    background-color: #d9403a;
+  }
+</style>
+</head>
+<body>
+  <h1>Hızlı Tıkla Oyunu</h1>
+  <p class="instructions">10 saniye içinde mümkün olduğunca çok tıkla!</p>
+  <div class="timer">Süre: 10</div>
+  <button class="click-button" id="clickBtn" disabled>Tıkla!</button>
+  <div class="result" id="result"></div>
+  <button class="restart-button" id="restartBtn" style="display:none;">Tekrar Oyna</button>
+
+<script>
+  const clickBtn = document.getElementById('clickBtn');
+  const timerDisplay = document.querySelector('.timer');
+  const resultDisplay = document.getElementById('result');
+  const restartBtn = document.getElementById('restartBtn');
+
+  let timeLeft = 10;
+  let score = 0;
+  let gameActive = false;
+  let timerId;
+
+  function startGame() {
+    score = 0;
+    timeLeft = 10;
+    gameActive = true;
+    resultDisplay.textContent = '';
+    timerDisplay.textContent = 'Süre: ' + timeLeft;
+    clickBtn.disabled = false;
+    restartBtn.style.display = 'none';
+
+    timerId = setInterval(() => {
+      timeLeft--;
+      timerDisplay.textContent = 'Süre: ' + timeLeft;
+      if(timeLeft <= 0) {
+        clearInterval(timerId);
+        endGame();
+      }
+    }, 1000);
+  }
+
+  function endGame() {
+    gameActive = false;
+    clickBtn.disabled = true;
+    resultDisplay.textContent = 'Tebrikler! Skorun: ' + score;
+    restartBtn.style.display = 'inline-block';
+  }
+
+  clickBtn.addEventListener('click', () => {
+    if(!gameActive) return;
+    score++;
+  });
+
+  restartBtn.addEventListener('click', startGame);
+
+  // Start the game automatically on page load
+  window.onload = () => {
+    startGame();
+  };
+</script>
+</body>
+</html>
+

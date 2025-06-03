@@ -1,0 +1,21 @@
+<DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, inital-scale=1.0">
+<title>Web Tasarım</title>
+<body>
+<h1>Favori Meyveler</h1>
+<ul id="meyveListem"></ul>
+<script>
+let kullanici={ ad:"Yusuf", favoriMeyveler:["Karpuz","Mango","Ananas"]
+};
+let liste=document.getElementById("meyveListem");
+kullanici.favoriMeyveler.forEach(function(meyve){
+let li=document.createElement("li");
+li.innerText=meyve;
+liste.appendChild(li);
+});
+</script>
+</body>
+</html>

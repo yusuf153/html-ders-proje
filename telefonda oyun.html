@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Mobil Tap Oyun</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
+  :root {
+    --bg-color: #282c34;
+    --circle-color: #61dafb;
+    --text-color: #ffffff;
+    --button-color: #21a0f0;
+    --button-hover: #1883d3;
+  }
+  body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Patrick Hand', cursive, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  h1 {
+    margin-bottom: 10px;
+    font-size: 2rem;
+  }
+  .info {
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+  }
+  #game-area {
+    position: relative;
+    width: 90vw;
+    height: 400px;
+    max-width: 400px;
+    background: #1e2234;
+    border-radius: 20px;
+    box-shadow: 0 0 15px #1f75ff88;
+    overflow: hidden;
+  }
+  #circle {
+    position: absolute;
+    background-color: var(--circle-color);
+    border-radius: 50%;
+    width: 70px;
+    height: 70px;
+    cursor: pointer;
+    box-shadow: 0 0 15px var(--circle-color);
+    user-select: none;
+    touch-action: manipulation;
+  }
+  .hidden {
+    display: none;
+  }
+  button#start-btn {
+    margin-top: 20px;
+    background-color: var(--button-color);
+    border: none;
+    padding: 14px 40px;
+    color: white;
+    font-size: 1.2rem;
+    border-radius: 50px;
+    box-shadow: 0 5px 15px var(--button-color);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    user-select: none;
+  }
+  button#start-btn:hover {
+    background-color: var(--button-hover);
+  }
+  .status {
+    font-size: 1.4rem;
+    margin-top: 10px;
+  }
+</style>
+</head>
+<body>
+  <h1>Mobil Tap Oyunu</h1>
+  <div class="info">Çıkan çemberi mümkün olduğunca hızlı tapla!</div>
+  <div id="game-area">
+    <div id="circle" class="hidden"></div>
+  </div>
+  <button id="start-btn">Başla</button>
+  <div class="status" id="status"></div>
+
+  <script>
+    const circle = document.getElementById('circle');
+    const gameArea = document.getElementById('game-area');
+    const startBtn = document.getElementById('start-btn');
+    const statusDisplay = document.getElementById('status');
+
+    let score = 0;
+    let timeLeft = 20;
+    let gameInterval;
+    let countdownInterval;
+
+    function getRandomPosition() {
+      const areaRect = gameArea.getBoundingClientRect();
+      const circleSize = circle.offsetWidth;
+      const x = Math.random() * (areaRect.width - circleSize);
+      const y = Math.random() * (areaRect.height - circleSize);
+      return { x, y };
+    }
+
+    function showCircle() {
+      const pos = getRandomPosition();
+      circle.style.left = pos.x + 'px';
+      circle.style.top = pos.y + 'px';
+      circle.classList.remove('hidden');
+    }
+
+    function hideCircle() {
+      circle.classList.add('hidden');
+    }
+
+    function startGame() {
+      score = 0;
+      timeLeft = 20;
+      statusDisplay.textContent = 'Süre: ' + timeLeft + ' sn | Skor: ' + score;
+      startBtn.disabled = true;
+      showCircle();
+
+      gameInterval = setInterval(() => {
+        showCircle();
+      }, 1000);
+
+      countdownInterval = setInterval(() => {
+        timeLeft--;
+        statusDisplay.textContent = 'Süre: ' + timeLeft + ' sn | Skor: ' + score;
+        if (timeLeft <= 0) {
+          endGame();
+        }
+      }, 1000);
+    }
+
+    function endGame() {
+      clearInterval(gameInterval);
+      clearInterval(countdownInterval);
+      hideCircle();
+      statusDisplay.textContent = 'Oyun bitti! Skorun: ' + score;
+      startBtn.disabled = false;
+      startBtn.textContent = 'Tekrar Oyna';
+    }
+
+    circle.addEventListener('click', () => {
+      if (timeLeft > 0) {
+        score++;
+        statusDisplay.textContent = 'Süre: ' + timeLeft + ' sn | Skor: ' + score;
+        showCircle();
+      }
+    });
+
+    startBtn.addEventListener('click', startGame);
+  </script>
+</body>
+</html>
+
